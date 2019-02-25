@@ -121,6 +121,7 @@
                                      :condp             format-condp
                                      :case              format-case
                                      :fn                format-fn
+                                     :if                format-if
                                      0                  format-0
                                      1                  format-1}}}]
   (doseq [[k v] mappings]

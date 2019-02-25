@@ -80,7 +80,7 @@ Why? Because we are dealing with a macro call, not a function call. When I see `
 Particularly if I see `[x]` in a one-liner, I expect it to be regular data, not code.
 Note how `(fn [x])` and `(identity [x])` have vastly different semantics for `[x]`.
 
-Intentful newline placement makes those differences evident, decreasing cognitive strain.
+Intentful, consistent newline placement makes those differences evident, decreasing cognitive strain.
 
 ## License
 

@@ -1,20 +1,14 @@
 (ns net.vemv.autonewline.impl.formatters
   (:require
+   [net.vemv.autonewline.impl.formatters.generic :refer :all]
+   [net.vemv.autonewline.impl.formatters.try :as formatters.try]
    [net.vemv.autonewline.impl.substitutions :refer :all]
-   [net.vemv.autonewline.impl.util :refer [add-method]]
+   [net.vemv.autonewline.impl.util :refer :all]
    [rewrite-clj.zip :as zip]
    [rewrite-clj.zip.base]
    [rewrite-clj.zip.edit]
    [rewrite-clj.zip.move :as move]
-   [rewrite-clj.zip.whitespace]))
-
-;; One always should use `zip/right*` for navigation.
-;; An early implementation with `zip/next*` gave me some successes, but ultimately that failed.
-;; right*, unlike next*, returns nil if going off-bounds, hence the `or` you can see here.
-;; Later we check 'end' condition via `zip/rightmost?`.
-(defn r [n]
-  (or (zip/right* n)
-      n))
+   [rewrite-clj.zip.whitespace :as zip.whitespace]))
 
 (defn format-threaded-cond
   "Formats a `cond->`-like node."
@@ -93,36 +87,28 @@
       r
       safely-replace-whitespace-with-newline))
 
-(defn format-1
-  "Formats a node with a `:style/indent` of 1. See CIDER indent spec."
+(defn format-try
+  "Formats a `try` node."
   [node]
   {:post [%]}
   (-> node
-      zip/down*
-      r
-      r
-      r
-      safely-replace-whitespace-with-newline))
-
-(defn format-0
-  "Formats a node with a `:style/indent` of 0. See CIDER indent spec."
-  [node]
-  {:post [%]}
-  (-> node
-      zip/down*
-      r
-      safely-replace-whitespace-with-newline))
+      format-0
+      (formatters.try/format-catch)
+      (formatters.try/format-finally)
+      (trim-trailing-whitespace)))
 
 (defn register-methods!
   [multifn default & {:keys [mappings]
-                      :or {mappings {default identity
-                                     :threaded-cond     format-threaded-cond
-                                     :cond              format-cond
-                                     :condp             format-condp
-                                     :case              format-case
-                                     :fn                format-fn
-                                     :if                format-if
-                                     0                  format-0
-                                     1                  format-1}}}]
+                      :or   {mappings {default                  identity
+                                       :threaded-cond           format-threaded-cond
+                                       :cond                    format-cond
+                                       :condp                   format-condp
+                                       :case                    format-case
+                                       :fn                      format-fn
+                                       :if                      format-if
+                                       :try                     format-try
+                                       :zero-double-indentation format-0-2x-indentation
+                                       0                        format-0
+                                       1                        format-1}}}]
   (doseq [[k v] mappings]
     (add-method multifn k v)))

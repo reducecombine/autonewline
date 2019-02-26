@@ -44,6 +44,9 @@
              "if-not"               :if
              "if-some"              :if
 
+             "try"                  :try
+             ;; `catch` and `finally` are handled by the `try` formatter
+
              "comment"              0
              "do"                   0
              "dosync"               0

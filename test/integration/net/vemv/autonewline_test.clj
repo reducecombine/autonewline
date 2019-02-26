@@ -113,4 +113,33 @@
 
   false
   identity)
+
+(try
+  (catch Exception e
+    2)
+  (finally
+    3))
+
+(try
+  (catch Exception e)
+  (finally
+    3))
+
+(try
+  (catch Exception e))
+
+(try
+  2
+  2
+  (catch Exception e))
+
+(try
+  1
+  (catch Exception e
+    2)
+  (finally
+    3))
 "))
+
+(comment
+  (println (-> "resources/sample.edn" sut/format-file!)))

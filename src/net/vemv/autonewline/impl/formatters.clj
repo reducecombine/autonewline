@@ -15,6 +15,7 @@
   [node]
   {:post [%]}
   (let [n (-> node
+              remove-newlines
               zip/down*
               r
               r
@@ -31,7 +32,7 @@
   "Formats a `cond`-like node."
   [node]
   {:post [%]}
-  (let [n (-> node zip/down* r safely-replace-whitespace-with-newline)]
+  (let [n (-> node remove-newlines zip/down* r safely-replace-whitespace-with-newline)]
     (loop [n n]
       (if (zip/rightmost? n)
         n
@@ -43,7 +44,7 @@
   "Formats a `condp`-like node."
   [node]
   {:post [%]}
-  (let [n (-> node zip/down* r r safely-replace-whitespace-with-single-space
+  (let [n (-> node remove-newlines zip/down* r r safely-replace-whitespace-with-single-space
               r r r safely-replace-whitespace-with-newline)]
     (loop [n n]
       (if (zip/rightmost? n)
@@ -54,7 +55,7 @@
   "Formats a `case`-like node."
   [node]
   {:post [%]}
-  (let [n (-> node zip/down* safely-replace-whitespace-with-single-space
+  (let [n (-> node remove-newlines zip/down* safely-replace-whitespace-with-single-space
               r r r safely-replace-whitespace-with-newline)]
     (loop [n n]
       (if (zip/rightmost? n)
@@ -65,10 +66,10 @@
   "Formats a `fn`-like node."
   [node]
   {:post [%]}
-  (let [x (-> node zip/down* r r)
+  (let [x (-> node remove-newlines zip/down* r r)
         x (case (zip/tag x)
             :vector (-> x r)
-            :token (-> x r r r)
+            :token  (-> x r r r)
             x)]
     (safely-replace-whitespace-with-newline x)))
 
@@ -77,6 +78,7 @@
   [node]
   {:post [%]}
   (-> node
+      remove-newlines
       zip/down*
       r
       safely-replace-whitespace-with-single-space
@@ -94,6 +96,8 @@
   (-> node
       format-0
       (formatters.try/format-catch)
+      (r)
+      (safely-replace-whitespace-with-newline-and-two-spaces)
       (formatters.try/format-finally)
       (trim-trailing-whitespace)))
 

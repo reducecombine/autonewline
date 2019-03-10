@@ -13,10 +13,7 @@
   (let [success (and (-> node zip/tag #{:list})
                      (-> node zip/sexpr first #{'catch}))]
     (if success
-      (-> node
-          format-2-2x-indentation
-          (zip.whitespace/insert-space-right 1)
-          (zip.whitespace/insert-newline-right))
+      (-> node format-2-2x-indentation)
       (if (zip/rightmost? node)
         node
         (let [fixed-prior-node (-> node safely-replace-whitespace-with-newline r)]

@@ -10,8 +10,13 @@
    [rewrite-clj.zip.whitespace]))
 
 (deftest format-node
-  (are [x y] (= x
-                (-> y zip/of-string sut/format-node zip/root-string))
+  (are [x y] (do
+               (testing "Reformatting"
+                 (is (= x
+                        (-> y zip/of-string sut/format-node zip/root-string))))
+               (testing "Itempotency"
+                 (is (= x
+                        (-> x zip/of-string sut/format-node zip/root-string)))))
     "(cond\n  1\n  [1 2 3]\n\n  2\n  (+ 3 1))"                                                 "(cond 1 [1 2 3] 2 (+ 3 1))"
     "(cond\n  1\n  1\n\n  2\n  2)"                                                             "(cond 1 1 2 2)"
     "(case [2]\n  2 [2]\n  3 [3]\n  4)"                                                        "(case [2] 2 [2] 3 [3] 4)"

@@ -13,6 +13,7 @@
   [node]
   {:post [%]}
   (-> node
+      remove-newlines
       zip/down*
       r
       safely-replace-whitespace-with-newline))
@@ -22,6 +23,7 @@
   [node]
   {:post [%]}
   (-> node
+      remove-newlines
       zip/down*
       r
       safely-replace-whitespace-with-newline-and-double-indentation))
@@ -31,6 +33,7 @@
   [node]
   {:post [%]}
   (-> node
+      remove-newlines
       zip/down*
       r
       r
@@ -42,6 +45,7 @@
   [node]
   {:post [%]}
   (-> node
+      remove-newlines
       zip/down*
       r
       r

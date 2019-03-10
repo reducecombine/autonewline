@@ -3,10 +3,21 @@
    [clojure.repl]
    [rewrite-clj.zip :as zip]
    [rewrite-clj.zip.base]
+   [rewrite-clj.zip.walk]
    [rewrite-clj.zip.edit]
    [rewrite-clj.zip.move :as move]
    [rewrite-clj.zip.remove]
    [rewrite-clj.zip.whitespace :as zip.whitespace]))
+
+(defn print-node [node]
+  (println "-------------------------")
+  (println (zip/sexpr node))
+  (loop [n (zip/down* node)]
+    (println (str " " (zip/tag n) " -> " (pr-str (zip/string n))))
+    (if (zip/rightmost? n)
+      nil
+      (recur (zip/right* n))))
+  (println "-------------------------"))
 
 ;; One always should use `zip/right*` for navigation.
 ;; An early implementation with `zip/next*` gave me some successes, but ultimately that failed.
@@ -15,6 +26,12 @@
 (defn r [n]
   (or (zip/right* n)
       n))
+
+(defn remove-newlines [node]
+  (zip/prewalk* node
+                (fn [x]
+                  (-> x zip/tag #{:newline}))
+                zip/remove*))
 
 (defn safely-move-to-rightmost-node [n]
   (if (zip/rightmost? n)

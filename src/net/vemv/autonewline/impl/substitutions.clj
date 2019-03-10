@@ -12,6 +12,11 @@
     (zip/replace node (node.whitespace/->WhitespaceNode "\n  "))
     node))
 
+(defn safely-replace-whitespace-with-newline-and-two-spaces [node]
+  (if (zip/whitespace? node)
+    (zip/replace node (node.whitespace/->WhitespaceNode "\n  "))
+    node))
+
 (defn safely-replace-whitespace-with-newline-and-double-indentation [node]
   (if (zip/whitespace? node)
     (zip/replace node (node.whitespace/->WhitespaceNode "\n    "))

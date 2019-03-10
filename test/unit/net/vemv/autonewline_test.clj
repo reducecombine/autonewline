@@ -51,7 +51,7 @@
 
 (deftest idempotency
   (are [x] (= x
-                (-> x zip/of-string sut/format-node zip/root-string))
+              (-> x zip/of-string sut/format-node zip/root-string))
     "(cond\n  1\n  [1 2 3]\n\n  2\n  (+ 3 1))"
     "(cond\n  1\n  1\n\n  2\n  2)"
     "(case [2]\n  2 [2]\n  3 [3]\n  4)"
